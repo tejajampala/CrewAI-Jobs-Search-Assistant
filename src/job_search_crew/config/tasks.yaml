@@ -1,0 +1,107 @@
+classify_intent_task:
+  description: >
+    Classify the latest user message.
+
+    User message:
+    {message}
+
+    Current search role: {current_role}
+    Current search location: {current_location}
+    Number of jobs currently loaded: {job_count}
+
+    Rules:
+    - Use intent='new_search' when the user provides a job role and location, for example
+      'Data Engineer in Melbourne' or asks for a different role/location.
+    - Use intent='job_detail' when the user asks about a specific listed job, for example
+      'summarise job 2', 'tell me about the NAB role', or asks about a row in the current table.
+    - Use intent='current_results_question' when the user asks about the loaded jobs overall,
+      for example common skills, compare jobs, which is best, or summarise all jobs.
+    - Use intent='small_talk' for greetings, help, thanks, or unrelated small talk.
+    - Extract role and location only for a new_search.
+    - Extract selected_job_index as a 1-based integer only when the user clearly refers to a row number.
+  expected_output: >
+    A valid IntentResult JSON object with intent, role, location, selected_job_index, question, and reasoning.
+  agent: intent_router
+
+job_search_task:
+  description: >
+    Search for current jobs for the role '{role}' in '{location}'.
+
+    Requirements:
+    - Use search tools to find relevant listings.
+    - Return up to {max_jobs} jobs.
+    - Prefer jobs that clearly match both the role and location.
+    - Include title, company, location, url, source, posted_date when available.
+    - Include a short description snippet only if found.
+    - Do not invent URLs, dates, salaries, or companies.
+  expected_output: >
+    A JobSearchOutput JSON object containing role, location, jobs, and search_notes.
+  agent: job_researcher
+
+responsibilities_summary_task:
+  description: >
+    Analyse the job listings for '{role}' in '{location}'.
+
+    Job listings JSON:
+    {jobs_json}
+
+    Summarise:
+    - common responsibilities
+    - required skills and tools
+    - nice-to-have skills
+    - seniority signals
+    - application tips for a candidate
+
+    Be practical and concise. Do not invent information beyond the supplied listings.
+  expected_output: >
+    A ResponsibilitiesSummary JSON object.
+  agent: role_analyst
+
+job_detail_task:
+  description: >
+    Summarise this selected job.
+
+    Selected job JSON:
+    {selected_job_json}
+
+    User question:
+    {question}
+
+    Instructions:
+    - If a URL is present, use the website scraping/search tools to read the job page when possible.
+    - If the full page cannot be accessed, use the available listing snippet and clearly say that the full description was not accessible.
+    - Summarise responsibilities, required skills, nice-to-have skills, salary if available, and fit notes.
+    - Do not invent missing details.
+  expected_output: >
+    A JobDetailSummary JSON object.
+  agent: job_description_reader
+
+current_results_question_task:
+  description: >
+    Answer this user question about the currently loaded job results.
+
+    Current role: {current_role}
+    Current location: {current_location}
+    Current jobs JSON:
+    {jobs_json}
+    User question:
+    {question}
+
+    Keep the answer grounded in the loaded jobs only. If the user asks for a different role or location,
+    say that a new search is needed.
+  expected_output: >
+    A SmallTalkOutput JSON object where answer contains the grounded response.
+  agent: role_analyst
+
+small_talk_task:
+  description: >
+    Answer this user message inside a job-search assistant app.
+
+    User message:
+    {message}
+
+    Keep it friendly and short. Explain that the user can search by typing a role and location,
+    for example 'Data Engineer in Melbourne'.
+  expected_output: >
+    A SmallTalkOutput JSON object.
+  agent: small_talk_assistant
