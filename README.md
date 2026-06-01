@@ -85,9 +85,8 @@ The app then merges and filters the results to remove generic pages such as:
 job search results
 jobs in Seattle
 ```
-```
 
-## **.env example**
+## .env example**
 
 ```text
 OPENAI_API_KEY="your-key"
