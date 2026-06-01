@@ -18,7 +18,7 @@ The app lets users search for jobs by **role** and **location**, displays the re
 ## Features
 
 - Chat interface for role/location searches.
-- Example: `Data Engineer in Melbourne`.
+- Example: `Data Engineer in Seattle`.
 - Clickable HTML job results table with:
   - Role
   - Company
@@ -29,8 +29,8 @@ The app lets users search for jobs by **role** and **location**, displays the re
   - Job URL link
 - Users can open job links directly from the table.
 - Users can ask follow-up questions such as:
-  - `summarise job 1`
-  - `summarise job 2`
+  - `summarize job 1`
+  - `summarize job 2`
   - `What skills are common?`
   - `Compare these jobs`
 - If the user asks for a different role/location, the app starts a new search.
@@ -85,7 +85,15 @@ The app then merges and filters the results to remove generic pages such as:
 job search results
 jobs in Seattle
 ```
+```
 
+## `.env` example
+
+```env
+OPENAI_API_KEY="your-key"
+ANTHROPIC_API_KEY="your-key"
+SERPER_API_KEY="your-key"
+```
 ## Local run with uv
 
 From the project root:
