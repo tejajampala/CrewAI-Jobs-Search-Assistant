@@ -87,9 +87,9 @@ jobs in Seattle
 ```
 ```
 
-## .env example
+## **.env example**
 
-```env
+```text
 OPENAI_API_KEY="your-key"
 ANTHROPIC_API_KEY="your-key"
 SERPER_API_KEY="your-key"
