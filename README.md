@@ -87,13 +87,14 @@ jobs in Seattle
 ```
 ```
 
-## `.env` example
+## .env example
 
 ```env
 OPENAI_API_KEY="your-key"
 ANTHROPIC_API_KEY="your-key"
 SERPER_API_KEY="your-key"
 ```
+
 ## Local run with uv
 
 From the project root:
